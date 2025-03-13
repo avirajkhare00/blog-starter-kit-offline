@@ -1,8 +1,8 @@
-# A statically generated blog example using Next.js, Markdown, and TypeScript
+# A statically generated blog example using Next.js, Markdown, and TypeScript with Offline Support
 
-This is the existing [blog-starter](https://github.com/vercel/next.js/tree/canary/examples/blog-starter) plus TypeScript.
+This is the existing [blog-starter](https://github.com/vercel/next.js/tree/canary/examples/blog-starter) plus TypeScript, enhanced with Progressive Web App (PWA) features for offline reading.
 
-This example showcases Next.js's [Static Generation](https://nextjs.org/docs/app/building-your-application/routing/layouts-and-templates) feature using Markdown files as the data source.
+This example showcases Next.js's [Static Generation](https://nextjs.org/docs/app/building-your-application/routing/layouts-and-templates) feature using Markdown files as the data source, along with advanced offline capabilities.
 
 The blog posts are stored in `/_posts` as Markdown files with front matter support. Adding a new Markdown file in there will create a new blog post.
 
@@ -72,3 +72,32 @@ Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&ut
 # Notes
 
 `blog-starter` uses [Tailwind CSS](https://tailwindcss.com) [(v3.0)](https://tailwindcss.com/blog/tailwindcss-v3).
+
+## Offline Functionality
+
+This enhanced version includes Progressive Web App (PWA) features that allow users to read blog posts offline:
+
+### Key Features
+
+- **Save Posts for Offline Reading**: Users can save individual blog posts for offline reading with a simple click.
+- **Offline Status Detection**: The app automatically detects when the user is offline and provides appropriate UI feedback.
+- **Saved Posts Management**: A dedicated page for managing saved posts, including the ability to delete posts that are no longer needed.
+- **Offline Navigation**: Enhanced navigation that works seamlessly in offline mode.
+
+### Implementation Details
+
+- Uses the **Cache API** and **Service Workers** to cache assets and content for offline access.
+- Implements **localStorage** for managing the list of saved posts.
+- Custom React hooks (`useOfflineStorage`) for simplified offline data management.
+- Modular components for offline functionality, including `SaveOfflineButton`.
+
+### Testing Offline Mode
+
+To test the offline functionality:
+
+1. Visit the site and save some posts for offline reading
+2. Disconnect from the internet or use Chrome DevTools to simulate offline mode
+3. Navigate to the saved posts page to access your offline content
+4. Try viewing saved posts and managing your offline library
+
+The service worker automatically caches necessary assets and pages for a seamless offline experience.
