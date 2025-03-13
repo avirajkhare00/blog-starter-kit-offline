@@ -8,6 +8,7 @@ import Container from "@/app/_components/container";
 import Header from "@/app/_components/header";
 import { PostBody } from "@/app/_components/post-body";
 import { PostHeader } from "@/app/_components/post-header";
+import { SavePostForOffline } from "./save-post-offline";
 
 export default async function Post(props: Params) {
   const params = await props.params;
@@ -18,6 +19,12 @@ export default async function Post(props: Params) {
   }
 
   const content = await markdownToHtml(post.content || "");
+  
+  // Add the HTML content to the post object for offline storage
+  const postWithHtml = {
+    ...post,
+    htmlContent: content
+  };
 
   return (
     <main>
@@ -32,6 +39,7 @@ export default async function Post(props: Params) {
             author={post.author}
           />
           <PostBody content={content} />
+          <SavePostForOffline post={postWithHtml} />
         </article>
       </Container>
     </main>

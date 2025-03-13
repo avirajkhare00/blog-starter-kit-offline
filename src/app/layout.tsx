@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import cn from "classnames";
 import { ThemeSwitcher } from "./_components/theme-switcher";
+import { PWARegister } from "./_components/pwa-register";
+import { OfflineStatus } from "./_components/offline-status";
 
 import "./globals.css";
 
@@ -12,6 +14,13 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: `Next.js Blog Example with ${CMS_NAME}`,
   description: `A statically generated blog example using Next.js and ${CMS_NAME}.`,
+  manifest: "/manifest.json",
+  themeColor: "#000000",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: `Next.js Blog Example with ${CMS_NAME}`,
+  },
   openGraph: {
     images: [HOME_OG_IMAGE_URL],
   },
@@ -42,7 +51,7 @@ export default function RootLayout({
           sizes="16x16"
           href="/favicon/favicon-16x16.png"
         />
-        <link rel="manifest" href="/favicon/site.webmanifest" />
+        <link rel="manifest" href="/manifest.json" />
         <link
           rel="mask-icon"
           href="/favicon/safari-pinned-tab.svg"
@@ -54,7 +63,12 @@ export default function RootLayout({
           name="msapplication-config"
           content="/favicon/browserconfig.xml"
         />
-        <meta name="theme-color" content="#000" />
+        <meta name="theme-color" content="#000000" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content={`Next.js Blog Example with ${CMS_NAME}`} />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="mobile-web-app-capable" content="yes" />
         <link rel="alternate" type="application/rss+xml" href="/feed.xml" />
       </head>
       <body
@@ -63,6 +77,8 @@ export default function RootLayout({
         <ThemeSwitcher />
         <div className="min-h-screen">{children}</div>
         <Footer />
+        <PWARegister />
+        <OfflineStatus />
       </body>
     </html>
   );
