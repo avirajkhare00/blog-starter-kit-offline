@@ -14,14 +14,55 @@ workbox.core.setCacheNameDetails({
 
 // Start controlling the clients as soon as the SW is ready
 self.addEventListener('install', event => {
-  // Precache the offline page
+  // Precache important pages
   event.waitUntil(
     caches.open('offline-pages').then((cache) => {
-      return cache.add('/offline');
+      return Promise.all([
+        cache.add('/offline'),
+        cache.add('/saved-posts'),
+        cache.add('/')
+      ]);
     })
   );
   self.skipWaiting();
 });
+
+// When the service worker activates, claim clients so it can control open pages
+self.addEventListener('activate', event => {
+  event.waitUntil(clients.claim());
+});
+
+// Special route for the saved-posts page to ensure it works offline
+workbox.routing.registerRoute(
+  ({url}) => url.pathname === '/saved-posts',
+  new workbox.strategies.CacheFirst({
+    cacheName: 'saved-posts-page',
+    plugins: [
+      new workbox.expiration.ExpirationPlugin({
+        maxEntries: 1,
+        maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
+      })
+    ]
+  })
+);
+
+// Special route for blog posts to ensure they work offline
+workbox.routing.registerRoute(
+  ({url}) => url.pathname.startsWith('/posts/'),
+  new workbox.strategies.CacheFirst({
+    cacheName: 'blog-posts',
+    plugins: [
+      new workbox.expiration.ExpirationPlugin({
+        maxEntries: 50,
+        maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
+      })
+    ],
+    // If the network request fails, try to get from cache
+    async fetchDidFail() {
+      return caches.match('/saved-posts');
+    }
+  })
+);
 
 // These are the routes we are going to cache for offline support
 workbox.routing.registerRoute(
@@ -103,18 +144,34 @@ workbox.routing.registerRoute(
 
 // This "catch" handler is triggered when any of the other routes fail to
 // generate a response
-workbox.routing.setCatchHandler(async ({event}) => {
+workbox.routing.setCatchHandler(async ({request, event}) => {
   // The FALLBACK_URL entries must be added to the cache ahead of time, either
   // via runtime or precaching. If they are precached, then call
   // `matchPrecache(FALLBACK_URL)` (from the `workbox-precaching` package)
   // to get the response from the correct cache.
-  //
+  
+  // Check if the request is for a blog post
+  const url = new URL(request.url);
+  const isBlogPost = url.pathname.startsWith('/posts/');
+  
+  // First try to get from cache if it's a blog post
+  if (isBlogPost) {
+    const cachedResponse = await caches.match(request);
+    if (cachedResponse) {
+      return cachedResponse;
+    }
+  }
+  
   // Use event, request, and url to figure out how to respond.
   // One approach would be to use request.destination, see
   // https://medium.com/dev-channel/service-worker-caching-strategies-based-on-request-types-57411dd7652c
-  switch (event.request.destination) {
+  switch (request.destination) {
     case 'document':
-      // Return the offline page for navigation requests
+      // For blog posts, try to redirect to saved-posts if offline
+      if (isBlogPost) {
+        return caches.match('/saved-posts') || caches.match('/offline') || caches.match('/') || Response.error();
+      }
+      // Return the offline page for other navigation requests
       return caches.match('/offline') || caches.match('/') || Response.error();
     case 'image':
       // If using precached URLs:
