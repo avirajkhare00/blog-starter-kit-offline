@@ -1,3 +1,41 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom animations for offline functionality */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.animate-fade-in-down {
+  animation: fadeInDown 0.5s ease-out forwards;
+}
+
+/* Offline link styles */
+.offline-available {
+  position: relative;
+}
+
+.offline-available::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #4ade80; /* Green color for available */
+  border-radius: 1px;
+}
+
+.offline-unavailable {
+  color: #ef4444; /* Red color for unavailable */
+  text-decoration: line-through;
+  opacity: 0.7;
+}

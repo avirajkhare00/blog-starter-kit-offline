@@ -5,6 +5,7 @@ const withPWA = require('next-pwa')({
   disable: process.env.NODE_ENV === 'development',
   scope: '/',
   sw: 'sw.js',
+  importScripts: ['offline-sw-extension.js'],
   runtimeCaching: [
     {
       urlPattern: /^https:\/\/fonts\.(?:gstatic|googleapis)\.com\/.*/i,

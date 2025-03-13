@@ -7,6 +7,8 @@ import { ThemeSwitcher } from "./_components/theme-switcher";
 import { PWARegister } from "./_components/pwa-register";
 import { OfflineStatus } from "./_components/offline-status";
 import PWAInstallPrompt from "./_components/pwa-install-prompt";
+import { OfflineFallback } from "./_components/offline-fallback";
+import { OfflineNavigator } from "./_components/offline-navigator";
 
 import "./globals.css";
 
@@ -81,6 +83,8 @@ export default function RootLayout({
         <PWARegister />
         <OfflineStatus />
         <PWAInstallPrompt />
+        <OfflineFallback />
+        <OfflineNavigator />
       </body>
     </html>
   );

@@ -6,6 +6,7 @@ import { Post } from '@/interfaces/post';
 import Link from "next/link";
 import Image from "next/image";
 import DateFormatter from "@/app/_components/date-formatter";
+import { OfflineAwareLink } from "@/app/_components/offline-aware-link";
 
 export default function OfflineContent() {
   const [savedPosts, setSavedPosts] = useState<Post[]>([]);
@@ -42,19 +43,19 @@ export default function OfflineContent() {
         </p>
         
         <div className="flex justify-center space-x-4 mb-12">
-          <Link 
+          <OfflineAwareLink 
             href="/"
             className="bg-black hover:bg-white hover:text-black border border-black text-white font-bold py-3 px-8 duration-200 transition-colors"
           >
             Go to Homepage
-          </Link>
+          </OfflineAwareLink>
           
-          <Link 
+          <OfflineAwareLink 
             href="/saved-posts"
             className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 duration-200 transition-colors"
           >
             View Saved Posts
-          </Link>
+          </OfflineAwareLink>
         </div>
       </div>
       
@@ -68,7 +69,7 @@ export default function OfflineContent() {
           <h2 className="text-2xl font-bold mb-6">Your Saved Posts</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {savedPosts.slice(0, 3).map((post) => (
-              <Link 
+              <OfflineAwareLink 
                 key={post.slug} 
                 href={`/posts/${post.slug}`}
                 className="group border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200"
@@ -93,7 +94,7 @@ export default function OfflineContent() {
                     {post.excerpt}
                   </p>
                 </div>
-              </Link>
+              </OfflineAwareLink>
             ))}
           </div>
           

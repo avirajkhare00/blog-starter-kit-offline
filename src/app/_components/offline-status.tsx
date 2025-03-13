@@ -1,27 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useOfflineDetection } from '@/lib/useOfflineDetection';
 
 export function OfflineStatus() {
-  const [isOffline, setIsOffline] = useState<boolean>(false);
-  
-  useEffect(() => {
-    // Set initial state
-    setIsOffline(!navigator.onLine);
-    
-    // Add event listeners for online/offline events
-    const handleOnline = () => setIsOffline(false);
-    const handleOffline = () => setIsOffline(true);
-    
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-    
-    // Clean up event listeners
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, []);
+  // Use our custom hook for more reliable offline detection
+  const isOffline = useOfflineDetection();
   
   if (!isOffline) return null;
   
