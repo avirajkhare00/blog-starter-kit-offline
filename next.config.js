@@ -1,8 +1,10 @@
 const withPWA = require('next-pwa')({
   dest: 'public',
   register: true,
-  skipWaiting: true,
+  skipWaiting: false, // Set to false to allow the user to control when to update the service worker
   disable: process.env.NODE_ENV === 'development',
+  scope: '/',
+  sw: 'sw.js',
   runtimeCaching: [
     {
       urlPattern: /^https:\/\/fonts\.(?:gstatic|googleapis)\.com\/.*/i,
@@ -123,6 +125,30 @@ const withPWA = require('next-pwa')({
         cacheName: 'blog-posts',
         expiration: {
           maxEntries: 50,
+          maxAgeSeconds: 30 * 24 * 60 * 60 // 30 days
+        }
+      }
+    },
+    {
+      // Special cache for saved posts page
+      urlPattern: /\/saved-posts$/i,
+      handler: 'CacheFirst',
+      options: {
+        cacheName: 'saved-posts-page',
+        expiration: {
+          maxEntries: 1,
+          maxAgeSeconds: 30 * 24 * 60 * 60 // 30 days
+        }
+      }
+    },
+    {
+      // Special cache for offline page
+      urlPattern: /\/offline$/i,
+      handler: 'CacheFirst',
+      options: {
+        cacheName: 'offline-page',
+        expiration: {
+          maxEntries: 1,
           maxAgeSeconds: 30 * 24 * 60 * 60 // 30 days
         }
       }

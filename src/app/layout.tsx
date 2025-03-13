@@ -6,6 +6,7 @@ import cn from "classnames";
 import { ThemeSwitcher } from "./_components/theme-switcher";
 import { PWARegister } from "./_components/pwa-register";
 import { OfflineStatus } from "./_components/offline-status";
+import PWAInstallPrompt from "./_components/pwa-install-prompt";
 
 import "./globals.css";
 
@@ -79,6 +80,7 @@ export default function RootLayout({
         <Footer />
         <PWARegister />
         <OfflineStatus />
+        <PWAInstallPrompt />
       </body>
     </html>
   );
